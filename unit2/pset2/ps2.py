@@ -273,17 +273,17 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     robots = []
 
     for trial in range(num_trials):
-        #anim = ps2_visualize.RobotVisualization(num_robots, width, height)
+        anim = ps2_visualize.RobotVisualization(num_robots, width, height)
         place = RectangularRoom(width, height)
         for robot in range(num_robots):
             robots.append(robot_type(place, speed))
         for j in range(num_robots):
             while (place.getNumCleanedTiles()/place.getNumTiles()) < min_coverage:
                 for robot in robots:
-                    #anim.update(place, robots)
+                    anim.update(place, robots)
                     robot.updatePositionAndClean()
                 time_steps += 1  
-        #anim.done()        
+        anim.done()        
     mean = time_steps/ num_trials
     return mean        
 # Uncomment this line to see how much your simulation takes on average
