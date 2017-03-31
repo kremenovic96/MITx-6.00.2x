@@ -287,7 +287,7 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     mean = time_steps/ num_trials
     return mean        
 # Uncomment this line to see how much your simulation takes on average
-print(runSimulation(3, 1.0, 10, 10, 0.75, 10, StandardRobot))
+print(runSimulation(3, 1.0, 10, 10, 1, 10, StandardRobot))
 
 
 # === Problem 5
