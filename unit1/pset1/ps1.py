@@ -54,7 +54,6 @@ def greedy_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    # TODO: Your code here
     inner = []
     sol = []
     cowsCopy = list(cows.keys())
@@ -108,7 +107,14 @@ def brute_force_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+    def addWeight(cows):
+        sum = 0
+        for cow in cows:
+            sum += cows[cow]
+        return sum
+    for i in get_partitions():
+        
+    
 
         
 # Problem 3
