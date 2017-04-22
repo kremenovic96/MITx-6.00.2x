@@ -61,7 +61,13 @@ class SimpleVirus(object):
         """
 
         # TODO
-        return random.random() <= self.getClearProb()
+        #a = self.getClearProb()
+       # print(str(type(a)) + "is a")
+       # print(str(type(random.random()))+ "is random()")
+       # print(random.random())
+       # print (a)
+        return random.random() < self.getClearProb()
+
     
     def reproduce(self, popDensity):
         """
@@ -85,7 +91,7 @@ class SimpleVirus(object):
 
         # TODO
         if random.random() <= self.maxBirthProb*(1-popDensity):
-            return SimpleVirus(self.getMaxBirthProb, self.getClearProb)
+            return SimpleVirus(self.getMaxBirthProb(), self.getClearProb())
         else:
             raise NoChildException
 
@@ -189,9 +195,26 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     """
 
     # TODO
+    viruss = []
+    averages = []
+    time_steps=[]
+    for i in range(numTrials):
+        time_steps.append(i)
+    for i in range(numViruses):
+        viruss.append(SimpleVirus(maxBirthProb, clearProb))
+    patient = Patient(viruss, maxPop)    
+    for i in range(numTrials):
+        patient.update()
+        averages.append(patient.getTotalPop()/patient.getMaxPop())
+        
+    pylab.plot(time_steps, averages)    
+    pylab.title("SimpleVirus simulation")
+    pylab.xlabel("Time Steps")
+    pylab.ylabel("Average Virus Population")
+    pylab.legend()
+    pylab.show()
 
-
-
+simulationWithoutDrug(1, 10,1.0,0.0, 200)
 #
 # PROBLEM 3
 #
