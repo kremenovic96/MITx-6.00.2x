@@ -195,26 +195,28 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     """
 
     # TODO
-    viruss = []
-    averages = []
-    time_steps=[]
+    viruss = [SimpleVirus(maxBirthProb, clearProb) for i in range(numViruses)]
+    steps = 300
+    num_steps = [[] for i in range(steps)]
+    time_steps=[i for i in range(steps)]
+     
     for i in range(numTrials):
-        time_steps.append(i)
-    for i in range(numViruses):
-        viruss.append(SimpleVirus(maxBirthProb, clearProb))
-    patient = Patient(viruss, maxPop)    
-    for i in range(numTrials):
-        patient.update()
-        averages.append(patient.getTotalPop()/patient.getMaxPop())
-        
-    pylab.plot(time_steps, averages)    
+        patient = Patient(viruss, maxPop)
+        for j in range(steps):
+            num_steps[j].append(patient.update())
+    #print(len(num_steps))   
+    final_averages = [sum(i)/len(i) for i in num_steps]    
+    #print(final_averages)   
+    #print(final_averages)
+    pylab.plot(time_steps, final_averages)    
     pylab.title("SimpleVirus simulation")
     pylab.xlabel("Time Steps")
     pylab.ylabel("Average Virus Population")
     pylab.legend()
     pylab.show()
-
-simulationWithoutDrug(1, 10,1.0,0.0, 200)
+#simulationWithoutDrug(100, 200,0.1,0.99, 1)
+#simulationWithoutDrug(100, 1000,0.1,0.05, 1)
+#simulationWithoutDrug(100, 200,0.2,0.8, 1)
 #
 # PROBLEM 3
 #
@@ -242,19 +244,23 @@ class ResistantVirus(SimpleVirus):
         """
 
         # TODO
-
+        SimpleVirus.__init__(self, maxBirthProb, clearProb)
+        self.resistances = resistances
+        self.mutProb = mutProb
 
     def getResistances(self):
         """
         Returns the resistances for this virus.
         """
         # TODO
+        return self.resistances
 
     def getMutProb(self):
         """
         Returns the mutation probability for this virus.
         """
         # TODO
+        return self.mutProb
 
     def isResistantTo(self, drug):
         """
@@ -269,6 +275,9 @@ class ResistantVirus(SimpleVirus):
         """
         
         # TODO
+        if not(drug in self.resistances):
+            return False
+        return self.resistances[drug]
 
 
     def reproduce(self, popDensity, activeDrugs):
@@ -317,7 +326,20 @@ class ResistantVirus(SimpleVirus):
         """
 
         # TODO
-
+        for virus in activeDrugs:
+            if self.resistances[virus] == False:
+                raise NoChildException
+        if random.random() < self.maxBirthProb*(1-popDensity):
+            resCopy = dict(self.resistances)
+            for resistant in resCopy:
+                if random.random() < self.mutProb:
+                    if resCopy[resistant] == True:
+                        resCopy[resistant] = False
+                    else:
+                        resCopy[resistant] = True
+                        
+            return ResistantVirus(self.maxBirthProb, self.clearProb, resCopy, self.mutProb)
+                
             
 
 class TreatedPatient(Patient):
